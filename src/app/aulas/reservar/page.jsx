@@ -31,11 +31,12 @@ export default function Aula() {
                     <h4 className='text-primary'>Capacidad: 90 estudiantes</h4>
                 </div>
             </div>
-            <hr />
-            <h5 className='text-primary'>Descripción:</h5>
-            <p>El aula 691D cuenta con dos pizarras acricilicas y un datadisplay marca EPSON, se encuentra ubicada en el edificio nuevo y tiene una capacidad de 90 estudiantes.</p>
-            <div className='flex-grow-1' style={{ overflowY: "auto" }}>
-                <table className="table mt-3">
+            <div className='border rounded border-primary'>
+                <h5 className='text-primary pt-1 ps-1'>Descripción:</h5>
+                <p className='ps-1'>El aula 691D cuenta con dos pizarras acricilicas y un datadisplay marca EPSON, se encuentra ubicada en el edificio nuevo y tiene una capacidad de 90 estudiantes.</p>
+            </div>
+            <div className='flex-grow-1 mt-3' style={{ overflowY: "auto" }}>
+                <table className="table">
                     <thead className='table-dark'>
                         <tr>
                             <th scope="col">#</th>

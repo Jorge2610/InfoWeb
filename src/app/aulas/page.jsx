@@ -62,8 +62,8 @@ export default function Aulas() {
                     </div>
                 </div>
             </div>
-            <div className='flex-grow-1' style={{ overflowY: "auto" }}>
-                <table className="table mt-3">
+            <div className='flex-grow-1 mt-3' style={{ overflowY: "auto" }}>
+                <table className="table">
                     <thead className='table-dark'>
                         <tr>
                             <th scope="col">#</th>
