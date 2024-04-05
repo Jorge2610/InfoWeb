@@ -1,4 +1,6 @@
-import Link from 'next/link'
+'use client'
+import Link from 'next/link';
+import { useState } from 'react';
 
 const dayjs = require('dayjs');
 let date = dayjs();
@@ -9,7 +11,7 @@ let periodoInicial = dayjs().set('hour', 6).set('minute', 45).set('second', 0);
 for (let i = 1; i < 11; i++) {
     let periodoPrevio = periodoInicial;
     periodoInicial = periodoInicial.add(90, 'minute');
-    let periodo = { id: i, rango: periodoPrevio.format("HH:mm") + " - " + periodoInicial.format("HH:mm") };
+    let periodo = { id: i + "", rango: periodoPrevio.format("HH:mm") + " - " + periodoInicial.format("HH:mm") };
     periodos.push(periodo);
 }
 
@@ -27,11 +29,13 @@ for (let i = 1; i < 26; i++) {
 export default function Aulas() {
 
     const getData = () => {
-        console.log("holas1");
+        setPeriodo(document.getElementById("periodSelector").value);
     };
 
+    const [periodo, setPeriodo] = useState("0");
+
     return (
-        <div className='mt-2'>
+        <div className='d-flex flex-column contenido mt-2'>
             <h2 className="text-primary">Aulas FCyT</h2>
             <div className="mt-3 row">
                 <div className="col-12 col-sm-5 col-lg-5 mb-2">
@@ -52,20 +56,20 @@ export default function Aulas() {
                 </div>
                 <div className="col-5 col-sm-3 col-lg-2" style={{ marginTop: "30px" }}>
                     <div className="row w-100">
-                        <button type="button" className="btn btn-primary" id='searchButton'>
+                        <button type="button" className="btn btn-primary" id='searchButton' onClick={getData}>
                             <i className="bi bi-search"></i> Buscar
                         </button>
                     </div>
                 </div>
             </div>
-            <div style={{ maxHeight: "62vh", overflowY: "auto" }}>
+            <div className='flex-grow-1' style={{ overflowY: "auto" }}>
                 <table className="table mt-3">
                     <thead className='table-dark'>
                         <tr>
                             <th scope="col">#</th>
-                            <th scope="col">Aula</th>
-                            <th scope="col">Capacidad</th>
-                            <th scope="col">Acción</th>
+                            <th scope="col" className='text-center'>Aula</th>
+                            <th scope="col" className='text-center'>Capacidad</th>
+                            <th scope="col" className='text-center'>{periodo === "0" ? "Periodos" : "Reservar"}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -73,9 +77,19 @@ export default function Aulas() {
                             return (
                                 <tr key={aula.id}>
                                     <th scope="row">{aula.id}</th>
-                                    <td>{aula.aula}</td>
-                                    <td>{aula.capacidad}</td>
-                                    <td>@mdo</td>
+                                    <td className='w-auto text-center'>{aula.aula}</td>
+                                    <td className='w-auto text-center'>{aula.capacidad}</td>
+                                    <td className='w-25 text-center'>
+                                        {periodo === "0" ?
+                                            <Link
+                                                href={{ pathname: "/aulas/reservar", query: { aula: aula.id } }}
+                                                className='btn btn-outline-primary'>
+                                                <i className="bi bi-eye"></i>
+                                            </Link>
+                                            :
+                                            <button className='btn btn-outline-primary'>Reservar</button>
+                                        }
+                                    </td>
                                 </tr>
                             );
                         })}
@@ -83,9 +97,7 @@ export default function Aulas() {
                 </table>
             </div>
             <div className="col-2 mt-3 mb-2">
-                <div className="row ms-0">
-                    <Link className="btn btn-primary" href="/">Atrás</Link>
-                </div>
+                <Link className="btn btn-primary" href="/">Atrás</Link>
             </div>
         </div>
     );
