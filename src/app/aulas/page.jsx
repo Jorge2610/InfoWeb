@@ -1,67 +1,33 @@
-'use client'
 import Link from 'next/link';
-import { useState } from 'react';
+import Buscador from './componentes/buscador';
+import dayjs from 'dayjs';
 
-const dayjs = require('dayjs');
-let date = dayjs();
-date = date.add(1, "d").format("YYYY-MM-DD");
+export default async function Aulas({ searchParams }) {
 
-const periodos = [];
-let periodoInicial = dayjs().set('hour', 6).set('minute', 45).set('second', 0);
-for (let i = 1; i < 11; i++) {
-    let periodoPrevio = periodoInicial;
-    periodoInicial = periodoInicial.add(90, 'minute');
-    let periodo = { id: i + "", rango: periodoPrevio.format("HH:mm") + " - " + periodoInicial.format("HH:mm") };
-    periodos.push(periodo);
-}
+    const periodo = searchParams.periodo;
+    const actual = dayjs().add(1, "d");
+    const fechaParam = dayjs(searchParams.fecha);
+    const fecha = actual > fechaParam ? actual.format("YYYY-MM-DD") : fechaParam.format("YYYY-MM-DD");
 
-const aulas = [];
-
-for (let i = 1; i < 26; i++) {
-    let aula = {
-        id: i,
-        aula: Math.floor(Math.random() * 69 + 625),
-        capacidad: Math.floor(Math.random() * 40 + 80)
-    };
-    aulas.push(aula);
-}
-
-export default function Aulas() {
-
-    const getData = () => {
-        setPeriodo(document.getElementById("periodSelector").value);
+    const fetchAulas = async () => {
+        const res = await fetch(`http://localhost:3000/api/aulas/0`);
+        const datos = await res.json();
+        return datos.aulas;
     };
 
-    const [periodo, setPeriodo] = useState("0");
+    const fetchPeriodos = async () => {
+        const res = await fetch(`http://localhost:3000/api/periodos`);
+        const datos = await res.json();
+        return datos.periodos;
+    };
+
+    const aulas = await fetchAulas();
+    const periodos = await fetchPeriodos();
 
     return (
         <div className='d-flex flex-column contenido mt-2'>
             <h2 className="text-primary">Aulas FCyT</h2>
-            <div className="mt-3 row">
-                <div className="col-12 col-sm-5 col-lg-5 mb-2">
-                    <label htmlFor="dateSelector" className="form-label">Fecha</label>
-                    <input type="date" id='dateSelector' className="form-control"
-                        defaultValue={date} min={date} />
-                </div>
-                <div className={"col-7 col-sm-4 col-lg-5"}>
-                    <label htmlFor="periodSelector" className="form-label">Periodo</label>
-                    <select className="form-select" aria-label="periodSelector" id='periodSelector'>
-                        <option value="0" key={0}>Todos</option>
-                        {periodos.map(periodo => {
-                            return (
-                                <option value={periodo.id} key={periodo.id}>{periodo.rango}</option>
-                            );
-                        })}
-                    </select>
-                </div>
-                <div className="col-5 col-sm-3 col-lg-2" style={{ marginTop: "30px" }}>
-                    <div className="row w-100">
-                        <button type="button" className="btn btn-primary" id='searchButton' onClick={getData}>
-                            <i className="bi bi-search"></i> Buscar
-                        </button>
-                    </div>
-                </div>
-            </div>
+            <Buscador periodos={periodos} fecha={fecha} idSelected={periodo} />
             <div className='flex-grow-1 mt-3' style={{ overflowY: "auto" }}>
                 <table className="table">
                     <thead className='table-dark'>
@@ -75,9 +41,9 @@ export default function Aulas() {
                     <tbody>
                         {aulas.map((aula) => {
                             return (
-                                <tr key={aula.id}>
-                                    <th scope="row">{aula.id}</th>
-                                    <td className='w-auto text-center'>{aula.aula}</td>
+                                <tr key={aula.idaula}>
+                                    <th scope="row">{aula.idaula}</th>
+                                    <td className='w-auto text-center'>{aula.nombre}</td>
                                     <td className='w-auto text-center'>{aula.capacidad}</td>
                                     <td className='w-25 text-center'>
                                         {periodo === "0" ?
