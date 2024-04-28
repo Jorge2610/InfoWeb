@@ -1,57 +1,54 @@
-"use client"
-import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
+import { fetchAulas, fetchPeriodos } from '@/utils/data';
+import dayjs from 'dayjs';
 
-const dayjs = require('dayjs');
-let date = dayjs();
-date = date.add(1, "d").format("YYYY-MM-DD");
+export default async function ReservaAula({ searchParams }) {
 
-const periodos = [];
-let periodoInicial = dayjs().set('hour', 6).set('minute', 45).set('second', 0);
-for (let i = 1; i < 11; i++) {
-    let periodoPrevio = periodoInicial;
-    periodoInicial = periodoInicial.add(90, 'minute');
-    let periodo = { id: i + "", rango: periodoPrevio.format("HH:mm") + " - " + periodoInicial.format("HH:mm"), reservado: (i % 2 == 0) };
-    periodos.push(periodo);
-}
+    const idAula = searchParams.aula;
+    const fecha = searchParams.fecha;
 
-export default function Aula() {
-
-    const searchParams = useSearchParams();
-    const idAula = searchParams.get('aula');
+    const aula = (await fetchAulas(idAula))[0];
+    let periodos = await fetchPeriodos();
+    const rangos = [];
+    for (let i = 0; i < periodos.length - 1; i++) {
+        rangos.push({ ...periodos[i], fin: periodos[i + 1].periodo });
+    }
 
     return (
         <div className="d-flex flex-column contenido mt-2">
-            <h2 className="text-primary">Reserva de periodo</h2>
+            <h2 className="text-primary">Reserva de periodo - {aula.nombre}</h2>
             <div className="row">
                 <div className="col-12 col-md-6">
-                    <h4 className='text-primary'>Aula: 691D</h4>
+                    <h4 className='text-primary'>Fecha: {dayjs(fecha).format("DD/MM/YYYY")}</h4>
                 </div>
                 <div className="col-12 col-md-6">
-                    <h4 className='text-primary'>Capacidad: 90 estudiantes</h4>
+                    <h4 className='text-primary'>Capacidad: {aula.capacidad} estudiantes</h4>
                 </div>
             </div>
             <div className='border rounded border-primary'>
                 <h5 className='text-primary pt-1 ps-1'>Descripción:</h5>
-                <p className='ps-1'>El aula 691D cuenta con dos pizarras acricilicas y un datadisplay marca EPSON, se encuentra ubicada en el edificio nuevo y tiene una capacidad de 90 estudiantes.</p>
+                <p className='ps-2'>{aula.ubicacion}</p>
+                <p className='ps-2'>{aula.descripcion}</p>
             </div>
             <div className='flex-grow-1 mt-3' style={{ overflowY: "auto" }}>
                 <table className="table">
                     <thead className='table-dark'>
                         <tr>
                             <th scope="col">#</th>
-                            <th scope="col" className='text-center'>Periodo</th>
+                            <th scope="col" className='text-center'>Inicio</th>
+                            <th scope="col" className='text-center'>Fin</th>
                             <th scope="col" className='text-center'>Reserva</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {periodos.map((periodo) => {
+                        {rangos.map((rango) => {
                             return (
-                                <tr key={periodo.id}>
-                                    <th scope="row">{periodo.id}</th>
-                                    <td className='text-center'>{periodo.rango}</td>
+                                <tr key={rango.idperiodo}>
+                                    <th scope="row">{rango.idperiodo}</th>
+                                    <td className='text-center'>{rango.periodo}</td>
+                                    <td className='text-center'>{rango.fin}</td>
                                     <td className='text-center'>
-                                        {periodo.reservado ?
+                                        {rango.reservado ?
                                             "Reservado"
                                             :
                                             <button className='btn btn-outline-primary'>Reservar</button>
@@ -64,7 +61,11 @@ export default function Aula() {
                 </table>
             </div>
             <div className="col-2 mt-3 mb-2">
-                <Link className="btn btn-primary" href="/aulas">Atrás</Link>
+                <Link
+                    href={{ pathname: "/aulas", query: { fecha: fecha, periodo: 0 } }}
+                    className='btn btn-primary'>
+                    Atrás
+                </Link>
             </div>
         </div>
     );

@@ -1,4 +1,4 @@
-import { query } from "../../../db";
+import { query } from "@/utils/db";
 
 export async function GET(request, { params }) {
     const id = parseInt(params.id);

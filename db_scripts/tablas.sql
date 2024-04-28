@@ -39,15 +39,23 @@ ALTER SEQUENCE public.aulas_idaula_seq OWNED BY public.Aulas.idAula;
 
 CREATE TABLE public.Reservas (
                 idAula INTEGER NOT NULL,
-                idPeriodo INTEGER NOT NULL,
                 fecha DATE NOT NULL,
+                periodoInicio INTEGER NOT NULL,
+                periodoFin INTEGER NOT NULL,
                 idUsuario INTEGER NOT NULL,
-                CONSTRAINT idreserva PRIMARY KEY (idAula, idPeriodo, fecha)
+                CONSTRAINT idreserva PRIMARY KEY (idAula, fecha, periodoInicio, periodoFin)
 );
 
 
 ALTER TABLE public.Reservas ADD CONSTRAINT periodos_reservas_fk
-FOREIGN KEY (idPeriodo)
+FOREIGN KEY (periodoInicio)
+REFERENCES public.Periodos (idPeriodo)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+NOT DEFERRABLE;
+
+ALTER TABLE public.Reservas ADD CONSTRAINT periodos_reservas_fk1
+FOREIGN KEY (periodoFin)
 REFERENCES public.Periodos (idPeriodo)
 ON DELETE NO ACTION
 ON UPDATE NO ACTION

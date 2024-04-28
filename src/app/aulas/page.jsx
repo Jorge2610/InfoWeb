@@ -1,6 +1,7 @@
 import Link from 'next/link';
-import Buscador from './componentes/buscador';
+import Buscador from '@/components/buscador';
 import dayjs from 'dayjs';
+import { fetchAulas, fetchPeriodos } from '@/utils/data';
 
 export default async function Aulas({ searchParams }) {
 
@@ -9,19 +10,7 @@ export default async function Aulas({ searchParams }) {
     const fechaParam = dayjs(searchParams.fecha);
     const fecha = actual > fechaParam ? actual.format("YYYY-MM-DD") : fechaParam.format("YYYY-MM-DD");
 
-    const fetchAulas = async () => {
-        const res = await fetch(`http://localhost:3000/api/aulas/0`);
-        const datos = await res.json();
-        return datos.aulas;
-    };
-
-    const fetchPeriodos = async () => {
-        const res = await fetch(`http://localhost:3000/api/periodos`);
-        const datos = await res.json();
-        return datos.periodos;
-    };
-
-    const aulas = await fetchAulas();
+    const aulas = await fetchAulas(0);
     const periodos = await fetchPeriodos();
 
     return (
@@ -48,7 +37,7 @@ export default async function Aulas({ searchParams }) {
                                     <td className='w-25 text-center'>
                                         {periodo === "0" ?
                                             <Link
-                                                href={{ pathname: "/aulas/reservar", query: { aula: aula.id } }}
+                                                href={{ pathname: "/aulas/reservar", query: { aula: aula.idaula, fecha: fecha } }}
                                                 className='btn btn-outline-primary'>
                                                 <i className="bi bi-eye"></i>
                                             </Link>
