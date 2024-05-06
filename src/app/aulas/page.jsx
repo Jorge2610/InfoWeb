@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import Buscador from '@/components/buscador';
+import Buscador from '@/components/Buscador';
 import dayjs from 'dayjs';
 import { fetchAulas, fetchPeriodos } from '@/utils/data';
 

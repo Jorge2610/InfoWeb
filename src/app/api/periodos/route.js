@@ -7,6 +7,6 @@ export async function GET(request) {
         const periodos = response.rows;
         return Response.json({ periodos });
     } catch (error) {
-        return new Response.json({ error });
+        return Response.json({ error });
     }
 }
