@@ -5,7 +5,8 @@ import { fetchAulas, fetchPeriodos } from '@/utils/data';
 
 export default async function Aulas({ searchParams }) {
 
-    const periodo = searchParams.periodo;
+    const periodoInicio = searchParams.periodoIni;
+    const periodoFin = searchParams.periodoFin;
     const actual = dayjs().add(1, "d");
     const fechaParam = dayjs(searchParams.fecha);
     const fecha = actual > fechaParam ? actual.format("YYYY-MM-DD") : fechaParam.format("YYYY-MM-DD");
@@ -16,7 +17,7 @@ export default async function Aulas({ searchParams }) {
     return (
         <div className='d-flex flex-column contenido mt-2'>
             <h2 className="text-primary">Aulas FCyT</h2>
-            <Buscador periodos={periodos} fecha={fecha} idSelected={periodo} />
+            <Buscador periodos={periodos} fecha={fecha} periodoIni={periodoInicio}/>
             <div className='flex-grow-1 mt-3' style={{ overflowY: "auto" }}>
                 <table className="table">
                     <thead className='table-dark'>
@@ -24,7 +25,7 @@ export default async function Aulas({ searchParams }) {
                             <th scope="col">#</th>
                             <th scope="col" className='text-center'>Aula</th>
                             <th scope="col" className='text-center'>Capacidad</th>
-                            <th scope="col" className='text-center'>{periodo === "0" ? "Periodos" : "Reservar"}</th>
+                            <th scope="col" className='text-center'>{periodoInicio === "0" ? "Periodos" : "Reservar"}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -35,7 +36,7 @@ export default async function Aulas({ searchParams }) {
                                     <td className='w-auto text-center'>{aula.nombre}</td>
                                     <td className='w-auto text-center'>{aula.capacidad}</td>
                                     <td className='w-25 text-center'>
-                                        {periodo === "0" ?
+                                        {periodoInicio === "0" ?
                                             <Link
                                                 href={{ pathname: "/aulas/reservar", query: { aula: aula.idaula, fecha: fecha } }}
                                                 className='btn btn-outline-primary'>
