@@ -22,7 +22,7 @@ export const hacerReserva = async (idAula, fecha, idPeriodoInicio, idPeriodoFin,
 export const fetchReservasPorAula = async (idAula, fecha) => {
     let rangos = await getRangos();
     idAula = parseInt(idAula);
-    let reservas = await fetch(`${urlBase}/reservas?idAula=${idAula}&fecha=${fecha}`);
+    let reservas = await fetch(`${urlBase}/reservas?idAula=${idAula}&fecha=${fecha}`, {next: {tags: ['reservasAula']}});
     reservas = await reservas.json();
     rangos = verificarReservas(rangos, reservas.data);
     return rangos;
@@ -32,7 +32,7 @@ const getRangos = async () => {
     const periodos = await fetchPeriodos();
     const rangos = [];
     for (let i = 0; i < periodos.length - 1; i++) {
-        rangos.push({ ...periodos[i], fin: periodos[i + 1].periodo, reservado: false });
+        rangos.push({ ...periodos[i], fin: periodos[i + 1].periodo, reservado: false, proceso: false });
     }
     return rangos;
 };
