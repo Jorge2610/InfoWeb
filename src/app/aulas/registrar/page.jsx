@@ -12,7 +12,7 @@ export default function Registrar() {
               type="text"
               className="form-control mb-3"
               id="nombre"
-              placeholder="Ingrese su nombre..."
+              placeholder="Ingrese nombre de aula..."
             />
           </div>
           <div className="form-group mb-3 ">
