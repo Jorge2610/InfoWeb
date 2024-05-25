@@ -1,4 +1,4 @@
-'use client';
+"use client";
 import dayjs from "dayjs";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -7,8 +7,12 @@ export default function Home() {
     const [usuario, setUsuario] = useState("");
     const [contrasenia, setContrasenia] = useState("");
     const [error, setError] = useState(null);
+    const [visible, setVisible] = useState(false);
     const router = useRouter();
 
+    const handleVisible = () => {
+        setVisible(!visible);
+    };
     const handleLogin = async (e) => {
         e.preventDefault();
         setError(null);
@@ -19,7 +23,10 @@ export default function Home() {
                 headers: {
                     "Content-type": "application/json",
                 },
-                body: JSON.stringify({ nombreusuario: usuario,contrasenia:contrasenia }),
+                body: JSON.stringify({
+                    nombreusuario: usuario,
+                    contrasenia: contrasenia,
+                }),
             });
             const result = await res.json();
             if (res.ok) {
@@ -56,13 +63,23 @@ export default function Home() {
                             value={usuario}
                             onChange={(e) => setUsuario(e.target.value)}
                         />
-                        <input
-                            type="password"
-                            className="form-control icon-p mb-4"
-                            placeholder="&#xF600;Contraseña"
-                            value={contrasenia}
-                            onChange={(e) => setContrasenia(e.target.value)}
-                        />
+
+                        <div className="input-group mb-4">
+                            <input
+                                type= {visible ? "text" : "password"}
+                                className="form-control icon-p border-del "
+                                placeholder="&#xF600;Contraseña"
+                                value={contrasenia}
+                                onChange={(e) => setContrasenia(e.target.value)}
+                            />
+                            <span className="input-group-text" onClick={handleVisible}>
+                                {visible ? (
+                                    <span className="icon-p">&#xF341;</span>
+                                ) : (
+                                    <span className="icon-p">&#xF340;</span>
+                                )}
+                            </span>
+                        </div>
 
                         <button
                             type="submit"

@@ -3,7 +3,24 @@
 }
 .icon-p {
   font-family: 'Bootstrap-icons';
+  
 }
+
+.border-del {
+  border-right: none;
+}
+
+
+
+.input-group-text {
+  background: none;
+  
+  padding: 2;
+  
+}
+
+
+
 @media (max-height: 800px) {
   .page {
     min-height: 800px;
