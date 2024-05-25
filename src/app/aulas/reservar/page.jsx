@@ -9,6 +9,7 @@ export default async function ReservaAula({ searchParams }) {
     const fecha = searchParams.fecha;
 
     const aula = (await fetchAulas(idAula))[0];
+    const reservas = await fetchReservasPorAula(idAula, fecha);
  
     return (
         <div className="d-flex flex-column contenido mt-2">
@@ -26,7 +27,7 @@ export default async function ReservaAula({ searchParams }) {
                 <p className='ps-2'>{aula.ubicacion}</p>
                 <p className='ps-2'>{aula.descripcion}</p>
             </div>
-            <TablaReserva idAula={idAula} fecha={fecha} />
+            <TablaReserva reservas={reservas} idAula={idAula} fecha={fecha} aula={aula.nombre}/>
             <div className="col-2 mt-3 mb-2">
                 <Link
                     href={{ pathname: "/aulas", query: { fecha: fecha, periodo: 0 } }}

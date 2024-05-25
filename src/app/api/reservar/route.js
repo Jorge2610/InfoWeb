@@ -1,4 +1,5 @@
 import { query } from '@/utils/db';
+import { revalidateTag } from "next/cache";
 
 export async function POST(req, res) {
     const data = await req.json()
@@ -8,6 +9,7 @@ export async function POST(req, res) {
     const valores = [data.idAula, data.fecha, data.idPeriodoInicio, data.idPeriodoFin, data.idUsuario];
     try {
         let res = await query(consulta, valores);
+        revalidateTag('reservasAula');
         res = res.rows[0];
         return new Response(JSON.stringify({
             success: true,
