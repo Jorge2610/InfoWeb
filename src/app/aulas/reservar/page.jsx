@@ -2,9 +2,15 @@ import Link from 'next/link';
 import { fetchAulas, fetchReservasPorAula } from '@/utils/data';
 import dayjs from 'dayjs';
 import TablaReserva from '@/components/TablaReserva';
+import {cookies} from "next/headers";
+import { redirect } from 'next/navigation';
+import Navegador from '@/components/Navegador';
 
 export default async function ReservaAula({ searchParams }) {
 
+    cookies().get("tipo-usuario") === undefined ? redirect("/") : null;  
+    const usuario = cookies().get("nombre-usuario")?.value;
+    const tipo = cookies().get("tipo-usuario")?.value;
     const idAula = searchParams.aula;
     const fecha = searchParams.fecha;
 
@@ -13,6 +19,7 @@ export default async function ReservaAula({ searchParams }) {
  
     return (
         <div className="d-flex flex-column contenido mt-2">
+            <Navegador usuario={usuario} tipo={tipo}/>
             <h2 className="text-primary">Reserva de periodo - {aula.nombre}</h2>
             <div className="row">
                 <div className="col-12 col-md-6">

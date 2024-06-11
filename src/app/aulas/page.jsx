@@ -1,10 +1,15 @@
-import Link from 'next/link';
 import Buscador from '@/components/Buscador';
+import Navegador from '@/components/Navegador';
 import dayjs from 'dayjs';
 import { fetchAulas, fetchPeriodos } from '@/utils/data';
+import {cookies} from "next/headers";
+import { redirect } from 'next/navigation';
 
 export default async function Aulas({ searchParams }) {
 
+    cookies().get("tipo-usuario") === undefined ? redirect("/") : null;  
+    const usuario = cookies().get("nombre-usuario")?.value;
+    const tipo = cookies().get("tipo-usuario")?.value;
     const periodoInicio = searchParams.periodoIni;
     const periodoFin = searchParams.periodoFin;
     const actual = dayjs().add(1, "d");
@@ -16,6 +21,7 @@ export default async function Aulas({ searchParams }) {
 
     return (
         <div className='d-flex flex-column contenido mt-2'>
+            <Navegador usuario={usuario} tipo={tipo}/>
             <h2 className="text-primary">Aulas FCyT</h2>
             <Buscador periodos={periodos} fecha={fecha} periodoIni={periodoInicio}/>
             <div className='flex-grow-1 mt-3' style={{ overflowY: "auto" }}>
@@ -37,11 +43,11 @@ export default async function Aulas({ searchParams }) {
                                     <td className='w-auto text-center'>{aula.capacidad}</td>
                                     <td className='w-25 text-center'>
                                         {periodoInicio === "0" ?
-                                            <Link
-                                                href={{ pathname: "/aulas/reservar", query: { aula: aula.idaula, fecha: fecha } }}
+                                            <a
+                                                href={`/aulas/reservar?aula=${aula.idaula}&fecha=${fecha}`}
                                                 className='btn btn-outline-primary'>
                                                 <i className="bi bi-eye"></i>
-                                            </Link>
+                                            </a>
                                             :
                                             <button className='btn btn-outline-primary'>Reservar</button>
                                         }
@@ -51,9 +57,6 @@ export default async function Aulas({ searchParams }) {
                         })}
                     </tbody>
                 </table>
-            </div>
-            <div className="col-2 mt-3 mb-2">
-                <Link className="btn btn-primary" href="/">Atrás</Link>
             </div>
         </div>
     );

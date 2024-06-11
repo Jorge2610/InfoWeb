@@ -1,12 +1,11 @@
 import { query } from "@/utils/db";
-
+import { cookies } from "next/headers";
 
 export async function POST(request) {
     try {
         const data = await request.json();
         const {nombreusuario,contrasenia} = data;
         
-
         const consulta = "SELECT * FROM usuarios WHERE nombreusuario = $1 AND contrasenia = $2;";
         const valores = [nombreusuario,contrasenia];
 
@@ -14,7 +13,8 @@ export async function POST(request) {
 
         if(response.rows.length > 0) {
             const usuario = response.rows[0];
-            
+            cookies().set("tipo-usuario", usuario.tipousuario, {sameSite: "strict"});
+            cookies().set("nombre-usuario", usuario.nombreusuario, {sameSite: "strict"});
             return new Response( JSON.stringify ({
                 success:true,
                 message: "usuario autenticado con exito",
