@@ -1,9 +1,10 @@
 .red {
   background-color: #B81F14;
 }
+
 .icon-p {
   font-family: 'Bootstrap-icons';
-  
+
 }
 
 .border-del {
@@ -14,14 +15,30 @@
 
 .input-group-text {
   background: none;
-  
+
   padding: 2;
-  
+
 }
 
 .nav-li:hover {
   background-color: #e5eaf2;
-  border-radius: 3px;
+  border-radius: 4px;
+}
+
+li ul:hover {
+  background-color: #e5eaf2;
+  cursor: pointer;
+}
+
+@media (max-width: 992px) {
+  .hidden {
+    display: none;
+  }
+}
+
+
+#navbarSupportedContent {
+  font-size: 17px;
 }
 
 @media (max-height: 800px) {

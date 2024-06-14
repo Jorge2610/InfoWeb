@@ -6,7 +6,7 @@ export default function Modal({ id, titulo, data, cancelar, confirmar }) {
 
     const deleteData = () => {
         motivo.current.value = "";
-        cancelar();
+        cancelar(data.index);
     };
 
     return (

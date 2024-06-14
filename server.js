@@ -10,6 +10,8 @@ const port = 3000;
 const app = next({ dev, hostname, port });
 const handler = app.getRequestHandler();
 
+const reservas = new Map();
+
 app.prepare().then(() => {
     const server = createServer((req, res) => {
         const parsedUrl = parse(req.url, true);
@@ -21,8 +23,22 @@ app.prepare().then(() => {
     io.on("connection", async (socket) => {
         console.log('Cliente conectado: ' + socket.id);
 
-        socket.on("control-reserva", (msg) => {
-            socket.broadcast.emit("bloquear-reserva", msg);
+        socket.on("reservas-en-proceso", (msg, callback) => {
+            const aux = reservas.get(msg.key);
+            aux === undefined ? reservas.set(msg.key, msg.data) : null;
+            callback(aux);
+        });
+
+        socket.on("reservando", (msg) => {
+            const aux = reservas.get(msg.key);
+            aux[msg.index] = msg.value;
+            socket.broadcast.emit("actualizar-datos", aux);
+        });
+
+        socket.on("reserva-cancelada", (msg) => {
+            const aux = reservas.get(msg.key);
+            aux[msg.index].proceso = false;
+            socket.broadcast.emit("actualizar-datos", aux);
         });
 
         socket.on('disconnect', () => {

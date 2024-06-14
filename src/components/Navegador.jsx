@@ -15,7 +15,7 @@ export default function Navegador({ usuario, tipo }) {
         <div className="pb-2 pt-1 mb-3" style={{ borderBottom: "2px solid #B81F14" }}>
             <nav className="navbar navbar-expand-lg">
                 <div className="container-fluid">
-                    <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <button className="navbar-toggler mb-3 mb-0-lg" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                         <span className="navbar-toggler-icon"></span>
                     </button>
                     <div className="collapse navbar-collapse" id="navbarSupportedContent">
@@ -26,7 +26,7 @@ export default function Navegador({ usuario, tipo }) {
                                     .format("YYYY-MM-DD")}&periodoIni=0&periodoFin=0`}><i className="bi bi-eye"></i> Aulas</a>
                             </li>
                             {tipo === "1" ? <>
-                                <li className="nav-item nav-li mx-2">
+                                <li className="nav-item nav-li mx-2 hidden">
                                     <div style={{ marginTop: "10px", height: "20px", borderLeft: "1px solid gray" }}></div>
                                 </li>
                                 <li className="nav-item nav-li">
@@ -36,13 +36,13 @@ export default function Navegador({ usuario, tipo }) {
                                     <a className="nav-link" href="#"><i className="bi bi-gear"></i> Aulas</a>
                                 </li>
                             </> : <></>}
-                            <li className="nav-item nav-li mx-2">
+                            <li className="nav-item nav-li mx-2 hidden">
                                 <div style={{ marginTop: "10px", height: "20px", borderLeft: "1px solid gray" }}></div>
                             </li>
                             <li className="nav-item dropdown nav-li">
                                 <a className="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false"><i className="bi bi-person"></i> {usuario}</a>
-                                <ul className="dropdown-menu">
-                                    <li><button className="dropdown-item btn" onClick={cerrarSesion}><i className="bi bi-box-arrow-left"></i> Cerrar sesión</button></li>
+                                <ul className="dropdown-menu p-2" onClick={cerrarSesion}>
+                                    <i className="bi bi-box-arrow-left"></i> Cerrar sesión
                                 </ul>
                             </li>
                         </ul>

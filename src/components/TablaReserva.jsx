@@ -20,10 +20,13 @@ export default function TablaReserva({ reservas, idAula, fecha, aula }) {
     const [status, setStatus] = useState(500);
 
     const inicializarSocket = () => {
-        socket.on("bloquear-reserva", (msg) => {
-            if (msg.idAula === idAula && msg.fecha === fecha) {
-                setData(msg.data);
-            }
+
+        socket.emit("reservas-en-proceso", { key: idAula + fecha, data: reservas }, (response) => {
+            response !== undefined ? setData(response) : null;
+        });
+
+        socket.on("actualizar-datos", (msg) => {
+            setData(msg);
         });
     };
 
@@ -38,7 +41,7 @@ export default function TablaReserva({ reservas, idAula, fecha, aula }) {
         setStatus(0);
         alerta.removeAttribute('hidden');
         const res = await hacerReserva(idAula, fecha, data[index].idperiodo, idPeriodoFin, 1);
-        res === 200 ? bloquearReserva(index, 0) : cancelarProcesoReserva();
+        res === 200 ? bloquearReserva(index, 0) : cancelarProcesoReserva(index);
         setStatus(res);
         setTimeout(() => {
             alerta.setAttribute('hidden', 'true');
@@ -49,11 +52,11 @@ export default function TablaReserva({ reservas, idAula, fecha, aula }) {
         const newData = JSON.parse(JSON.stringify(data));
         if (target === 0) {
             newData[index].reservado = true;
-            setData(newData);
         } else {
             newData[index].proceso = true;
         }
-        socket.emit("control-reserva", { idAula: idAula, fecha: fecha, data: newData });
+        setData(newData);
+        socket.emit("reservando", { key: idAula + fecha, index: index, value: newData[index] });
     };
 
     const actualizarDatosModal = (index) => {
@@ -69,8 +72,11 @@ export default function TablaReserva({ reservas, idAula, fecha, aula }) {
         bloquearReserva(index, 1);
     };
 
-    const cancelarProcesoReserva = () => {
-        socket.emit("control-reserva", { idAula: idAula, fecha: fecha, data: data });
+    const cancelarProcesoReserva = (index) => {
+        const newData = JSON.parse(JSON.stringify(data));
+        newData[index].proceso = false;
+        setData(newData);
+        socket.emit("reserva-cancelada", { key: idAula + fecha, index: index });
     };
 
     return (
@@ -116,7 +122,7 @@ export default function TablaReserva({ reservas, idAula, fecha, aula }) {
                                     <td className='text-center'>{rango.fin}</td>
                                     <td className='text-center'>
                                         <button
-                                            className={`btn btn-outline-${rango.proceso ? 'info' : rango.reservado ? 'secondary' : 'primary'}`}
+                                            className={`btn btn-outline-${rango.proceso ? 'secondary' : 'primary'}`}
                                             disabled={rango.reservado || rango.proceso}
                                             title="Reservar periodo"
                                             onClick={e => iniciarProcesoReserva(index)}
@@ -125,8 +131,9 @@ export default function TablaReserva({ reservas, idAula, fecha, aula }) {
                                             style={{ width: '110px' }}>
                                             {rango.reservado ? 'Reservado' :
                                                 rango.proceso ?
-                                                    <div className="spinner-border spinner-border-sm text-info" role="status">
-                                                        <span className="visually-hidden">Proceso...</span>
+                                                    <div className="d-flex align-items-center">
+                                                        <div className="spinner-border spinner-border-sm text-secondary me-1" aria-hidden="true" role="status"></div>
+                                                        <span role="status">Espere...</span>
                                                     </div>
                                                     :
                                                     'Reservar'}
