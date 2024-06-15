@@ -20,9 +20,8 @@ export default function TablaReserva({ reservas, idAula, fecha, aula }) {
     const [status, setStatus] = useState(500);
 
     const inicializarSocket = () => {
-
         socket.emit("reservas-en-proceso", { key: idAula + fecha, data: reservas }, (response) => {
-            response !== undefined ? setData(response) : null;
+            response !== null ? setData(response) : null;
         });
 
         socket.on("actualizar-datos", (msg) => {
@@ -32,7 +31,6 @@ export default function TablaReserva({ reservas, idAula, fecha, aula }) {
 
     useEffect(() => {
         inicializarSocket();
-        document !== undefined ? require("bootstrap/dist/js/bootstrap") : null;
     }, []);
 
     const realizarReserva = async (index) => {
