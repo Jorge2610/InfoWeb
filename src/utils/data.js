@@ -6,14 +6,11 @@ export const fetchAulas = async (id) => {
     return datos.aulas;
 };
 
-export const fetchUsuarios = async() => {
-    const res = await fetch(`${urlBase}/usuarios`);
-    if (!res.ok) {
-        throw new Error('Failed to fetch data');
-    }
+export const fetchUsuarios = async(id) => {
+    const res = await fetch(`${urlBase}/usuarios/${id}`);
     const data = await res.json();
     return data.docentes;
-}
+};
 
 export const fetchPeriodos = async () => {
     const res = await fetch(`${urlBase}/periodos`);
@@ -35,6 +32,14 @@ export const fetchReservasPorAula = async (idAula, fecha) => {
     reservas = await reservas.json();
     rangos = verificarReservas(rangos, reservas.data);
     return rangos;
+};
+
+export const fetchReservasPorDocente = async (idusuario) => {
+     idusuario = parseInt(idusuario);
+    let res = await fetch(`${urlBase}/reservasDoc?idusuario=${idusuario}`, {next:{tags:['reservasDoc']} });
+    const data = await res.json();
+    
+    return data.data;
 };
 
 const getRangos = async () => {

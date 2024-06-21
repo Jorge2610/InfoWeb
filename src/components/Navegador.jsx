@@ -36,10 +36,10 @@ export default function Navegador({ usuario, tipo }) {
                                     <div style={{ marginTop: "10px", height: "20px", borderLeft: "1px solid gray" }}></div>
                                 </li>
                                 <li className="nav-item nav-li">
-                                    <Link className="nav-link" href="/usuarios"><i className="bi bi-person-gear"></i> Usuarios</Link>
+                                    <Link className="nav-link" href={{ pathname:"/usuarios",query: { id: 0 }}}><i className="bi bi-person-gear"></i> Usuarios</Link>
                                 </li>
                                 <li className="nav-item nav-li">
-                                    <Link className="nav-link" href="https://nextjs.org/docs/app/api-reference/components/link"><i className="bi bi-gear"></i> Aulas</Link>
+                                    <Link className="nav-link" href="/aulas/registrar"><i className="bi bi-gear"></i> Aulas</Link>
                                 </li>
                             </> : <></>}
                             <li className="nav-item nav-li mx-2 hidden">

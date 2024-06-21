@@ -18,7 +18,7 @@ export default async function ReservaAula({ searchParams }) {
     const aula = (await fetchAulas(idAula))[0];
     const reservas = await fetchReservasPorAula(idAula, fecha);
 
-    const usuarios = await fetchUsuarios();
+    const usuarios = await fetchUsuarios(0);
 
     const usuariobd = usuarios.find(user => user.nombreusuario === usuario);
 

@@ -6,14 +6,15 @@ import { fetchUsuarios } from "@/utils/data";
 
 export default async function Usuarios() {
     cookies().get("tipo-usuario") === undefined ? redirect("/") : null;
-    const usuario = cookies().get("nombre-usuario")?.value;
+    const usuarioc = cookies().get("nombre-usuario")?.value;
     const tipo = cookies().get("tipo-usuario")?.value;
 
-    const usuarios = await fetchUsuarios()
+    const usuarios = await fetchUsuarios(0)
+    
 
     return (
         <div className="d-flex flex-column contenido mt-2">
-            <Navegador usuario={usuario} tipo={tipo} />
+            <Navegador usuario={usuarioc} tipo={tipo} />
             <h2 className="text-primary">Reservas FCyT</h2>
             <div className="flex-grow-1 mt-3" style={{ overflowY: "auto" }}>
                 <table className="table">
@@ -40,7 +41,7 @@ export default async function Usuarios() {
                                     <td className='w-auto text-center'>{usuario.dircorreo}</td>
                                     <td className='w-25 text-center'>
                                         <Link
-                                                href={{ pathname: '/aulas'}}
+                                                href={{ pathname: '/usuarios/reservas',query: { idusuario: usuario.idusuario} }}
                                                 className='btn btn-outline-primary'>
                                                 <i className="bi bi-eye"></i>
                                         </Link>
