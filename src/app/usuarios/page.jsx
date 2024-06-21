@@ -2,14 +2,14 @@ import Navegador from "@/components/Navegador";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { fetchAulas } from "@/utils/data";
+import { fetchUsuarios } from "@/utils/data";
 
-export default async function Aulas() {
+export default async function Usuarios() {
     cookies().get("tipo-usuario") === undefined ? redirect("/") : null;
     const usuario = cookies().get("nombre-usuario")?.value;
     const tipo = cookies().get("tipo-usuario")?.value;
 
-    const usuarios = await fetchAulas(0)
+    const usuarios = await fetchUsuarios()
 
     return (
         <div className="d-flex flex-column contenido mt-2">
@@ -32,12 +32,12 @@ export default async function Aulas() {
                         </tr>
                     </thead>
                     <tbody>
-                    {usuarios.map((usuario) => {
+                    {usuarios.map((usuario, index) => {
                             return (
                                 <tr key={usuario.idusuario}>
-                                    <th scope="row">{usuario.idusuario}</th>
-                                    <td className='w-auto text-center'></td>
-                                    <td className='w-auto text-center'></td>
+                                    <th scope="row">{index+1}</th>
+                                    <td className='w-auto text-center'>{usuario.nombreusuario}</td>
+                                    <td className='w-auto text-center'>{usuario.dircorreo}</td>
                                     <td className='w-25 text-center'>
                                         <Link
                                                 href={{ pathname: '/aulas'}}

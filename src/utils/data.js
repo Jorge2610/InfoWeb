@@ -6,6 +6,15 @@ export const fetchAulas = async (id) => {
     return datos.aulas;
 };
 
+export const fetchUsuarios = async() => {
+    const res = await fetch(`${urlBase}/usuarios`);
+    if (!res.ok) {
+        throw new Error('Failed to fetch data');
+    }
+    const data = await res.json();
+    return data.docentes;
+}
+
 export const fetchPeriodos = async () => {
     const res = await fetch(`${urlBase}/periodos`);
     const datos = await res.json();
