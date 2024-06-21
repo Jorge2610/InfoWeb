@@ -5,7 +5,7 @@ import { socket } from "@/utils/socket";
 import Modal from "@/components/Modal";
 import dayjs from 'dayjs';
 
-export default function TablaReserva({ reservas, idAula, fecha, aula }) {
+export default function TablaReserva({ reservas, idAula, fecha, aula, idUsuario }) {
 
     const [data, setData] = useState(reservas);
     const [modalData, setModalData] = useState(
@@ -38,7 +38,7 @@ export default function TablaReserva({ reservas, idAula, fecha, aula }) {
         const alerta = document.getElementById('alerta');
         setStatus(0);
         alerta.removeAttribute('hidden');
-        const res = await hacerReserva(idAula, fecha, data[index].idperiodo, idPeriodoFin, 1);
+        const res = await hacerReserva(idAula, fecha, data[index].idperiodo, idPeriodoFin,idUsuario);
         res === 200 ? bloquearReserva(index, 0) : cancelarProcesoReserva(index);
         setStatus(res);
         setTimeout(() => {

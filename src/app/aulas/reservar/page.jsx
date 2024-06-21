@@ -5,6 +5,7 @@ import TablaReserva from '@/components/TablaReserva';
 import {cookies} from "next/headers";
 import { redirect } from 'next/navigation';
 import Navegador from '@/components/Navegador';
+import { fetchUsuarios } from "@/utils/data";
 
 export default async function ReservaAula({ searchParams }) {
 
@@ -13,9 +14,15 @@ export default async function ReservaAula({ searchParams }) {
     const tipo = cookies().get("tipo-usuario")?.value;
     const idAula = searchParams.aula;
     const fecha = searchParams.fecha;
-
+    
     const aula = (await fetchAulas(idAula))[0];
     const reservas = await fetchReservasPorAula(idAula, fecha);
+
+    const usuarios = await fetchUsuarios();
+
+    const usuariobd = usuarios.find(user => user.nombreusuario === usuario);
+
+    
  
     return (
         <div className="d-flex flex-column contenido mt-2">
@@ -34,7 +41,7 @@ export default async function ReservaAula({ searchParams }) {
                 <p className='ps-2'>{aula.ubicacion}</p>
                 <p className='ps-2'>{aula.descripcion}</p>
             </div>
-            <TablaReserva reservas={reservas} idAula={idAula} fecha={fecha} aula={aula.nombre}/>
+            <TablaReserva reservas={reservas} idAula={idAula} fecha={fecha} aula={aula.nombre} idUsuario = {usuariobd.idusuario}/>
             <div className="col-2 mt-3 mb-2">
                 <Link
                     href={{ pathname: "/aulas", query: { fecha: fecha, periodo: 0 } }}
